@@ -31,7 +31,7 @@ class Botao extends StatelessWidget {
           width: isLoading ? _larguraLoading : _larguraBotao,
           height: aprovado == false ? 50 : height,
           decoration: BoxDecoration(
-            color: Colors.red,
+            color: Color(0xFF6750A4),
             borderRadius: BorderRadius.circular(aprovado == false ? 40 : 0),
           ),
           alignment: Alignment.center,

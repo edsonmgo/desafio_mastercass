@@ -11,8 +11,8 @@ class ButtonLoginRedeSocial extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 70,
-      height: 70,
+      width: 60,
+      height: 60,
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.circular(15),

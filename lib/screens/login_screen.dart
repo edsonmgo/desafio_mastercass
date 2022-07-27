@@ -21,9 +21,27 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
 
-    getButtonPosition();
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) {
+        final RenderBox? box =
+            buttonKey.currentContext!.findRenderObject() as RenderBox?;
+
+        Offset? positionLocal = box?.localToGlobal(Offset.zero);
+
+        if (positionLocal != null) {
+          var meioWidth = box!.size.width / 2;
+          var meioHeight = box.size.height / 2;
+
+          setState(() {
+            position = Offset(
+                positionLocal.dx + meioWidth, positionLocal.dy + meioHeight);
+          });
+        }
+      },
+    );
   }
 
   ///set a posicação inicial para o animated container
@@ -46,9 +64,34 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
+  ///Mostra mensagem snackbar erro login
+  void errorLogin() {
+    final snackBar = SnackBar(
+      backgroundColor: Color(0xFFB3261E),
+      duration: const Duration(seconds: 1),
+      content: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          const Text('Erro no login'),
+          const SizedBox(width: 200),
+          Icon(
+            Icons.close,
+            color: Colors.white,
+          ),
+        ],
+      ),
+      behavior: SnackBarBehavior.floating,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(20))),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
   @override
   Widget build(BuildContext context) {
     var mediaQuery = MediaQuery.of(context).size;
+
     return Scaffold(
       body: SizedBox(
         width: mediaQuery.width,
@@ -60,7 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Logo(image: 'assets/images/UOL_logo.png'),
+                    const Logo(image: 'assets/images/logo.png'),
                     const SizedBox(height: 50),
                     Container(
                       width: mediaQuery.width * 0.8,
@@ -68,8 +111,17 @@ class _LoginScreenState extends State<LoginScreen> {
                       constraints: const BoxConstraints(maxWidth: 500),
                       child: const TextField(
                         decoration: InputDecoration(
-                          label: Text('Email'),
+                          label: Text(
+                            'Email',
+                            style: TextStyle(
+                              color: Color(0xFF6750A4),
+                            ),
+                          ),
                           border: OutlineInputBorder(),
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xFF6750A4))),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xFF6750A4))),
                         ),
                       ),
                     ),
@@ -80,8 +132,17 @@ class _LoginScreenState extends State<LoginScreen> {
                       constraints: const BoxConstraints(maxWidth: 500),
                       child: const TextField(
                         decoration: InputDecoration(
-                          label: Text('Senha'),
+                          label: Text(
+                            'Senha',
+                            style: TextStyle(
+                              color: Color(0xFF6750A4),
+                            ),
+                          ),
                           border: OutlineInputBorder(),
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xFF6750A4))),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xFF6750A4))),
                         ),
                       ),
                     ),
@@ -107,7 +168,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             isLoading: isLoading,
                             key: buttonKey,
                             onTap: () async {
-                              // getButtonPosition();
+                              errorLogin();
+                              await Future.delayed(const Duration(seconds: 1));
+
                               setState(() {
                                 isLoading = !isLoading;
                               });
@@ -150,7 +213,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               color: Color(0xFF000000)),
                         ],
                       ),
-                    )
+                    ),
+                    const SizedBox(height: 50),
+                    const Text('Copyright © Masterclass 2022'),
+                    const SizedBox(height: 30),
                   ],
                 ),
               ),
@@ -158,15 +224,18 @@ class _LoginScreenState extends State<LoginScreen> {
                 left: isLoading ? position.dx : 0,
                 top: isLoading ? position.dy : 0,
                 curve: Curves.easeIn,
-                // height: _avanca ? mediaQuery.height : 0,
-                // width: _avanca ? mediaQuery.width : 0,
                 duration: const Duration(milliseconds: 500),
-                child: AnimatedContainer(
-                  duration: Duration(milliseconds: 500),
-                  curve: Curves.easeIn,
-                  color: Colors.blue,
-                  height: _avanca ? mediaQuery.height : 20,
-                  width: _avanca ? mediaQuery.width : 20,
+                child: GestureDetector(
+                  onTap: () {
+                    print('clicou tela cheia');
+                  },
+                  child: AnimatedContainer(
+                    duration: Duration(milliseconds: 500),
+                    curve: Curves.easeIn,
+                    color: Color(0xFF6750A4),
+                    height: _avanca ? mediaQuery.height : 0,
+                    width: _avanca ? mediaQuery.width : 0,
+                  ),
                 ),
               ),
             ],
